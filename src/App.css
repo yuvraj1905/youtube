@@ -8,6 +8,7 @@
 
 .scrollBar::-webkit-scrollbar-track {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: black;
 }
 
 .scrollBar::-webkit-scrollbar-thumb {
@@ -17,14 +18,33 @@
 }
 
 body::-webkit-scrollbar {
-  width: 0.75em;
+  width: 0.5em;
 }
 
 body::-webkit-scrollbar-track {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: black;
 }
 
 body::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+  border-radius: 0.25rem;
+}
+
+.scrollBarHr::-webkit-scrollbar {
+  width: 0.25em;
+  height: 0.1em;
+  display: none;
+}
+
+.scrollBarHr::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: black;
+  margin-top: 1rem;
+}
+
+.scrollBarHr::-webkit-scrollbar-thumb {
   background-color: darkgrey;
   outline: 1px solid slategrey;
   border-radius: 0.25rem;

@@ -7,14 +7,17 @@ import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { SiYoutubegaming } from "react-icons/si";
 import { ImFire } from "react-icons/im";
 import { Link, NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const LeftSideBar = () => {
+  const sideBarOpen = useSelector((store) => store.app.sideBarOpen);
   const mainTags = [
-    [<BiHomeAlt2 size={20} />, "Home"],
-    [<BiLike size={20} />, "Liked videos"],
-    [<VscHistory size={20} />, "History"],
-    [<AiOutlineClockCircle size={20} />, "Watch later"],
+    [<BiHomeAlt2 size={!sideBarOpen ? 25 : 20} />, "Home"],
+    [<BiLike size={!sideBarOpen ? 25 : 20} />, "Liked videos"],
+    [<VscHistory size={!sideBarOpen ? 25 : 20} />, "History"],
+    [<AiOutlineClockCircle size={!sideBarOpen ? 25 : 20} />, "Watch later"],
   ];
+
   const explore = [
     [<ImFire size={20} />, "Trending"],
     [<BiShoppingBag size={20} />, "Shopping"],
@@ -58,8 +61,9 @@ export const LeftSideBar = () => {
       fullname: "Youtube Kids",
     },
   ];
-  return (
-    <div className="w-[15%] text-white px-2 py-2 min-h-[92vh] max-h-[92vh] fixed flex items-center flex-col overflow-auto scrollBar pt-0">
+
+  return sideBarOpen ? (
+    <div className="w-[15%] text-white px-2 bg-black py-2 min-h-[92vh] max-h-[92vh] fixed flex items-center flex-col overflow-auto scrollBar pt-0">
       <ListMaker list={mainTags} />
       <h1 className="px-4 py-2 mt-2 font-bold self-start">Explore</h1>
       <ListMaker list={explore} />
@@ -91,6 +95,15 @@ export const LeftSideBar = () => {
       </small>
       <small className="px-4 py-1 self-start">© Yuvraj Kumar </small>
     </div>
+  ) : (
+    <div className="w-[8%] text-white pl-5 py-2 min-h-[92vh] max-h-[92vh] fixed flex items-center flex-col overflow-auto scrollBar gap-4 ">
+      {mainTags.map((tag) => (
+        <NavLink className="hover:font-bold flex flex-col py-2 font-semibold w-full gap-1">
+          <span className="self-start">{tag[0]}</span>
+          <small className="self-start">{tag[1]}</small>
+        </NavLink>
+      ))}
+    </div>
   );
 };
 
@@ -106,7 +119,11 @@ const ListMaker = ({ list }) => {
             className="hover:bg-stone-800 flex px-4 py-2 w-[100%] font-semibold mb-1 rounded-md  gap-6 items-center"
             key={tag[1]}
             style={navlinkStyler}
-            to={`/${tag[1].replaceAll(" ", "").toLowerCase()}`}
+            to={
+              tag[1] === "Home"
+                ? "/"
+                : `/${tag[1].replaceAll(" ", "").toLowerCase()}`
+            }
           >
             {tag[0]}
             <p className="">{tag[1]}</p>
