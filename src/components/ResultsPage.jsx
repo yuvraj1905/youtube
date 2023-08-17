@@ -8,17 +8,16 @@ import { useSelector } from "react-redux";
 const ResultsPage = () => {
   const [searchQuery] = useSearchParams();
   const [videos, setVideos] = useState([]);
-  const query = searchQuery.get("search_query");
+  const [query, setQuery] = useState(searchQuery.get("search_query"));
   const sideBarOpen = useSelector((store) => store.app.sideBarOpen);
   const [pages, setPages] = useState(1);
   const [nextPageToken, setNextPageToken] = useState("");
 
-  const getVideos = async () => {
+  const getVideos = async (queryy = query) => {
     try {
-      const res = await fetchSearchQueryAPI(query);
-      console.log(res, "opopop");
+      const res = await fetchSearchQueryAPI(queryy);
       res && setNextPageToken(res[1]);
-      res && setVideos([...videos, ...res[0]?.items]);
+      res && setVideos([...res[0]?.items]);
     } catch (e) {
       console.log(e);
     }
@@ -34,16 +33,14 @@ const ResultsPage = () => {
   };
 
   useEffect(() => {
-    console.log(query, "SEARCHQUERY");
-    pages === 1 ? getVideos() : moreVideosFetcher(nextPageToken);
-  }, [pages, query]);
+    pages > 1 && moreVideosFetcher(nextPageToken);
+  }, [pages]);
 
-  // useEffect(() => {
-  //   if (videos.length !== 0) {
-  //     setPages(1);
-  //     //ye work karega ya nhi yaha pe chore the..?? mtlb setpages 1 karna component re-render krega ya nhi, specifically base case me -> jub hum page scroll nhi kiye h (page number change nhi hua h) aur wahi se koi dusra search query ke liye call krte h ...
-  //   }
-  // }, [searchQuery]);
+  useEffect(() => {
+    setQuery(searchQuery.get("search_query"));
+    setPages(1);
+    getVideos(searchQuery.get("search_query"));
+  }, [searchQuery]);
 
   useEffect(() => {
     const listenerFunction = () => {
