@@ -35,6 +35,7 @@ import { randomCommentGenrrator, randomNameGenerate } from "../utils/helper";
 import SingleComment from "../components/SingleComment";
 import VideoCard from "../components/VideoCard";
 import RealCommentCard from "../components/RealCommentCard";
+import toast, { Toaster } from "react-hot-toast";
 
 const WatchPage = () => {
   const [searchParams] = useSearchParams();
@@ -92,7 +93,7 @@ const WatchPage = () => {
     return () => {
       dispatch(toggleForWatchPage(true));
     };
-  }, []);
+  }, [searchParams]);
   const videoPlayback = useRef(null);
 
   // console.log(videoDetails);
@@ -163,7 +164,7 @@ const WatchPage = () => {
                   navigate(`/profile?cId=${videoDetails?.snippet?.channelId}`)
                 }
                 src={profileDetails?.thumbnails?.high?.url}
-                className="cursor-pointer w-[13%] rounded-full "
+                className="cursor-pointer w-[12%] h-11 rounded-full "
                 alt=""
               />
               <span>
@@ -221,7 +222,12 @@ const WatchPage = () => {
                   later
                 </small>
               </span>
-              <span className="bg-stone-800 flex p-2 rounded-full w-24 items-center justify-evenly font-semibold cursor-pointer hover:bg-stone-700 border-none outline-none">
+              <span
+                onClick={() => {
+                  toast.success("Link copied to clipboard!");
+                }}
+                className="bg-stone-800 flex p-2 rounded-full w-24 items-center justify-evenly font-semibold cursor-pointer hover:bg-stone-700 border-none outline-none"
+              >
                 <FaShare size={18} />
                 <p>share</p>
               </span>
@@ -252,7 +258,7 @@ const WatchPage = () => {
             {"  "}
             Comments
           </h3>
-          <section>
+          <section className="mt-3">
             {realComments?.map((comment) => (
               <RealCommentCard
                 data={comment?.snippet?.topLevelComment?.snippet}

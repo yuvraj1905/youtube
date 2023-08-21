@@ -81,6 +81,12 @@ const Header = () => {
     cancelVoiceSearchHandler();
   };
 
+  const searchHandler = () => {
+    navigate(`/results?search_query=${inputSearch.replaceAll(" ", "+")}`);
+    setInputSearch("");
+    setSuggestionsHidden(true);
+  };
+
   return (
     <>
       <section
@@ -133,12 +139,7 @@ const Header = () => {
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && inputSearch !== "") {
-                    navigate(
-                      `/results?search_query=${inputSearch.replaceAll(
-                        " ",
-                        "+"
-                      )}`
-                    );
+                    searchHandler();
                   }
                 }}
                 onFocus={() => setSuggestionsHidden(false)}
@@ -161,10 +162,9 @@ const Header = () => {
             </span>
             <span
               onClick={() => {
-                if (inputSearch?.length > 0)
-                  navigate(
-                    `/results?search_query=${inputSearch.replaceAll(" ", "+")}`
-                  );
+                if (inputSearch?.length > 0) {
+                  searchHandler();
+                }
               }}
               className=" flex-1 flex items-center bg-stone-900 rounded-r-full justify-center cursor-pointer "
               title="Search"
@@ -185,6 +185,9 @@ const Header = () => {
                     navigate(
                       `/results?search_query=${item.replaceAll(" ", "+")}`
                     );
+                    setTimeout(() => {
+                      setInputSearch("");
+                    }, 0);
                   }}
                   className="flex gap-2 items-center py-2 px-4 hover:bg-stone-700"
                 >

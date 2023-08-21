@@ -11,11 +11,13 @@ import { Explore } from "./pages/ExplorePages";
 import Liked from "./pages/Liked";
 import WatchLater from "./pages/WatchLater";
 import History from "./pages/History";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <Provider store={store}>
       <div className="App relative ">
+        <Toaster position="top-center" reverseOrder={false} />
         <Header />
         <Routes>
           <Route path="/" element={<Body />} />

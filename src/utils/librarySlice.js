@@ -51,7 +51,7 @@ export const {
   addToWatchLaterVideos,
   addToLikedVideos,
   removeFromLikedVideos,
-  removeFromHistory,
+  clearHistory,
   removeFromWatchLaterVideos,
 } = librarySlice.actions;
 export default librarySlice.reducer;

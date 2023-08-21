@@ -9,7 +9,7 @@ const RealCommentCard = ({ data }) => {
       <img
         src={authorProfileImageUrl}
         alt=""
-        className="w-[5%] h-[80%] rounded-full mt-1"
+        className="w-[4%] h-[65%] rounded-full mt-1"
       />
       <section className="flex flex-col ">
         <span className="flex gap-4 items-center ">

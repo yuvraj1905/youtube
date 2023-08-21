@@ -18,6 +18,7 @@ import {
   removeFromWatchLaterVideos,
 } from "../utils/librarySlice";
 import { AiOutlineDislike } from "react-icons/ai";
+import toast, { Toaster } from "react-hot-toast";
 
 const VideoCard = ({ data, searchFeedVideo, likedVideosCard, relatedCard }) => {
   const { contentDetails, snippet, statistics, id } = data;
@@ -65,6 +66,7 @@ const VideoCard = ({ data, searchFeedVideo, likedVideosCard, relatedCard }) => {
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
   const [timer, setTimer] = useState(null);
   const dispatch = useDispatch();
+
   return (
     <div
       onMouseOver={() => setShowOptionBtn(true)}
@@ -167,7 +169,7 @@ const VideoCard = ({ data, searchFeedVideo, likedVideosCard, relatedCard }) => {
                 }}
                 src={profilePicture}
                 className={`w-[4%] cursor-pointer rounded-full object-contain ${
-                  relatedCard && "w-[14%]"
+                  relatedCard && "w-5"
                 }`}
                 alt=""
               />
@@ -256,6 +258,7 @@ rounded-md absolute right-8 top-5 bg-stone-800 ${
                   `https://www.youtube.com/watch?v=${id}`
                 );
                 setShowOptions(false);
+                toast.success("Link copied to clipboard!");
               }}
               className="flex py-[10px] rounded-md  hover:bg-stone-700 hover:cursor-pointer items-center gap-2 px-2 "
             >

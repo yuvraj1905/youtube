@@ -31,8 +31,7 @@ export const PROFILE_PICTURE_FETCHER = async (channelId) => {
     const profilePictureUrl = data?.items[0]?.snippet?.thumbnails?.default?.url;
     return profilePictureUrl;
   } catch (e) {
-    console.error("coudnt fetch channel profile picture");
-    return "";
+    console.log("coudnt fetch channel profile picture");
   }
 };
 
@@ -77,7 +76,7 @@ export const searchSuggestionsAPI =
 
 export const fetchSearchQueryAPI = async (query, nextPageToken = "") => {
   try {
-    console.log(query);
+    // console.log(query);
     const res =
       await fetch(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&q=${query}&part=snippet&type=video&maxResults=15${
         nextPageToken ? `&pageToken=${nextPageToken}` : ""
