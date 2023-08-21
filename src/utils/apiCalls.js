@@ -73,7 +73,7 @@ export const moreVideosFetcherAPI = async (token) => {
 };
 
 export const searchSuggestionsAPI =
-  "http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
+  "https://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
 
 export const fetchSearchQueryAPI = async (query, nextPageToken = "") => {
   try {
