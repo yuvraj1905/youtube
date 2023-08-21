@@ -80,16 +80,18 @@ export const MainContent = () => {
     : ` w-[85%] ml-[15%] `;
 
   const tagFilterHandler = async (id, title) => {
-    setData([]);
     const res = await videoFetchCatBased(title, id);
     if (res?.items?.length > 0) {
-      setNextPageToken(res?.nextPageToken);
-      setData([...res?.items]);
-      setTagsResults({
-        state: true,
-        title,
-        id,
-      });
+      setData([]);
+      setTimeout(() => {
+        setNextPageToken(res?.nextPageToken);
+        setData([...res?.items]);
+        setTagsResults({
+          state: true,
+          title,
+          id,
+        });
+      }, 500);
     }
   };
 
