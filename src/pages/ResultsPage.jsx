@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { fetchSearchQueryAPI, moreVideosFetcherAPI } from "../utils/apiCalls";
-import VideoCard from "./VideoCard";
-import { LeftSideBar } from "./LeftSideBar";
+import { fetchSearchQueryAPI } from "../utils/apiCalls";
+import VideoCard from "../components/VideoCard";
+import { LeftSideBar } from "../components/LeftSideBar";
 import { useSelector } from "react-redux";
+import { defaultClassNameString } from "../utils/helper";
+import Error from "../components/Error";
 
 const ResultsPage = () => {
   const [searchQuery] = useSearchParams();
@@ -16,8 +18,8 @@ const ResultsPage = () => {
   const getVideos = async (queryy = query) => {
     try {
       const res = await fetchSearchQueryAPI(queryy);
-      res && setNextPageToken(res[1]);
-      res && setVideos([...res[0]?.items]);
+      res && setNextPageToken(res?.nextPageToken);
+      res && setVideos([...res?.items]);
     } catch (e) {
       console.log(e);
     }
@@ -25,8 +27,8 @@ const ResultsPage = () => {
   const moreVideosFetcher = async (token) => {
     try {
       const res = await fetchSearchQueryAPI(query, token);
-      res && setNextPageToken(res[1]);
-      res && setVideos([...videos, ...res[0]?.items]);
+      res && setNextPageToken(res.nextPageToken);
+      res && setVideos([...videos, ...res?.items]);
     } catch (err) {
       console.log(err);
     }
@@ -57,30 +59,21 @@ const ResultsPage = () => {
   }, []);
 
   const classNameString = !sideBarOpen
-    ? `bg-black box-border w-[92%] py-4 px-8 ml-[8%] min-h-[90vh] relative  `
-    : `bg-black box-border w-[85%] py-4 px-8 ml-[15%] min-h-[90vh] relative  `;
+    ? ` w-[92%] ml-[8%] `
+    : ` w-[85%] ml-[15%] `;
   return (
     <div className="w-[100%] box-border flex bg-black relative mt-[8vh]">
       <LeftSideBar />
       {videos?.length > 1 ? (
         <section
-          className={`w-[100%] ${classNameString} flex flex-col  gap-2 justify-center items-center overflow-hidden pt-6`}
+          className={`w-[100%] ${classNameString} ${defaultClassNameString} flex flex-col  gap-2 justify-center items-center overflow-hidden pt-6`}
         >
           {videos?.map((video) => (
             <VideoCard data={video} key={video.id} searchFeedVideo />
           ))}
         </section>
       ) : (
-        <div
-          className={`w-[100%] ${classNameString} flex flex-col gap-2 justify-between overflow-hidden pt-6`}
-        >
-          <h1>Unable to fetch the requested query for now !</h1>
-          <h3>
-            Better try the original Youtube ! , this one's powered by free
-            API's, that too with limits
-          </h3>
-          <p>So , it breaks anytime ! Sorry for the inconvenience</p>
-        </div>
+        <Error />
       )}
     </div>
   );

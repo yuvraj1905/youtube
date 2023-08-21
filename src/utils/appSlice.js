@@ -10,6 +10,10 @@ const appSlice = createSlice({
     toggle: (state) => {
       state.sideBarOpen = !state.sideBarOpen;
     },
+    toggleForWatchPage: (state, { payload }) => {
+      console.log(payload, "payload");
+      state.sideBarOpen = payload;
+    },
 
     handleSearchInput: (state, { payload }) => {
       state.searchInput = payload;
@@ -17,5 +21,6 @@ const appSlice = createSlice({
   },
 });
 
-export const { toggle, handleSearchInput } = appSlice.actions;
+export const { toggle, toggleForWatchPage, handleSearchInput } =
+  appSlice.actions;
 export default appSlice.reducer;

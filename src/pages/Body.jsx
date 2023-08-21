@@ -1,5 +1,5 @@
 import React from "react";
-import { LeftSideBar } from "./LeftSideBar";
+import { LeftSideBar } from "../components/LeftSideBar";
 import { MainContent } from "./MainContent";
 
 const Body = () => {

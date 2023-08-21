@@ -41,25 +41,25 @@ export const ViewsCounter = (views) => {
   // 1422
   // 12555
   // 986655
-  if (views.length <= 3) return views;
-  if (views.length === 4) {
-    let result = views.slice(0, 2).split("").join(".");
+  if (views?.length <= 3) return views;
+  if (views?.length === 4) {
+    let result = views?.slice(0, 2).split("").join(".");
     if (result[2] == 0) result = Math.trunc(result);
     return result + "K";
   }
-  if (views.length <= 6) return Math.trunc(Number(views) / 1000) + "K";
-  if (views.length === 7) {
+  if (views?.length <= 6) return Math.trunc(Number(views) / 1000) + "K";
+  if (views?.length === 7) {
     let result = views.slice(0, 2).split("").join(".");
     if (result[2] == 0) result = Math.trunc(result);
     return result + "M";
   }
-  if (views.length <= 9) return Math.trunc(Number(views) / 1000000) + "M";
-  if (views.length === 10) {
+  if (views?.length <= 9) return Math.trunc(Number(views) / 1000000) + "M";
+  if (views?.length === 10) {
     let result = views.slice(0, 2).split("").join(".");
     if (result[2] == 0) result = Math.trunc(result);
     return result + "B";
   }
-  if (views.length <= 9) return Math.trunc(Number(views) / 1000000) + "B";
+  if (views?.length <= 9) return Math.trunc(Number(views) / 1000000) + "B";
 };
 
 export const TimeCounter = (postDate) => {
@@ -97,3 +97,15 @@ export const TimeCounter = (postDate) => {
     return `few seconds ago`;
   }
 };
+
+export function formatSubscriberCount(count) {
+  if (count >= 1000000000) {
+    return (count / 1000000000).toFixed(2) + "B ";
+  } else if (count >= 1000000) {
+    return (count / 1000000).toFixed(2) + "M ";
+  } else if (count >= 1000) {
+    return (count / 1000).toFixed(2) + "K ";
+  } else {
+    return "";
+  }
+}

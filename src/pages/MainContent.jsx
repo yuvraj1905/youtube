@@ -1,30 +1,43 @@
 import { useEffect, useState } from "react";
 import {
-  API_CALL_URL,
   fetchTagsUrl,
+  getAllVideos,
   moreVideosFetcherAPI,
   videoFetchCatBased,
 } from "../utils/apiCalls";
-import VideoCard from "./VideoCard";
+import VideoCard from "../components/VideoCard";
 import { useSelector } from "react-redux";
+import {
+  defaultClassNameString,
+  dummyArray,
+  homeSectionStyle,
+  tagsStyle,
+} from "../utils/helper";
+import ShimmerCard from "../components/ShimmerCard";
 
 export const MainContent = () => {
   const sideBarOpen = useSelector((store) => store.app.sideBarOpen);
   const [data, setData] = useState([]);
   const [pages, setPages] = useState(1);
   const [nextPageToken, setNextPageToken] = useState("");
+  const [tagResults, setTagsResults] = useState({ state: false });
   const getVideos = async () => {
     try {
-      const res = await fetch(API_CALL_URL);
-      const api_data = await res.json();
-      setNextPageToken(api_data?.nextPageToken);
-      setData([...api_data?.items]);
+      const res = tagResults.state
+        ? await videoFetchCatBased(tagResults.title, tagResults.id)
+        : await getAllVideos();
+      if (res) {
+        setNextPageToken(res?.nextPageToken);
+        res && setData([...res?.items]);
+      }
     } catch (e) {
       console.log(e);
     }
   };
   const moreVideosFetcher = async (token) => {
-    const res = await moreVideosFetcherAPI(token);
+    const res = tagResults.state
+      ? await videoFetchCatBased(tagResults.title, tagResults.id, nextPageToken)
+      : await moreVideosFetcherAPI(token);
     setNextPageToken(res?.nextPageToken);
     setData([...data, ...res?.items]);
   };
@@ -49,52 +62,80 @@ export const MainContent = () => {
   const [tags, setTags] = useState([]);
   useEffect(() => {
     async function tagsFetcher() {
-      const res = await fetch(fetchTagsUrl);
-      const data = await res.json();
-      setTags([...tags, ...data?.items]);
+      try {
+        const res = await fetch(fetchTagsUrl);
+        const data = await res.json();
+        if (data) {
+          setTags([...data?.items]);
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
     tagsFetcher();
   }, []);
 
   const classNameString = !sideBarOpen
-    ? `bg-black box-border w-[92%] py-4 px-8 ml-[8%] min-h-[90vh] relative  `
-    : `bg-black box-border w-[85%] py-4 px-8 ml-[15%] min-h-[90vh] relative  `;
+    ? ` w-[92%] ml-[8%] `
+    : ` w-[85%] ml-[15%] `;
 
   const tagFilterHandler = async (id, title) => {
-    if (title === "All") {
-    } else {
-      const res = await videoFetchCatBased(title, id);
-      // console.log(res);
-      if (res.length > 0) setData([...res]);
+    setData([]);
+    const res = await videoFetchCatBased(title, id);
+    if (res?.items?.length > 0) {
+      setNextPageToken(res?.nextPageToken);
+      setData([...res?.items]);
+      setTagsResults({
+        state: true,
+        title,
+        id,
+      });
+    }
+  };
+
+  const allClickHandler = async () => {
+    const res = await getAllVideos();
+    if (res) {
+      setNextPageToken(res?.nextPageToken);
+      setData([...res?.items]);
+      setTagsResults({
+        state: false,
+      });
     }
   };
 
   return (
     <>
-      {data?.length < 1 ? (
-        "SHIMMEER"
+      {data?.length < 1 || tags?.length < 1 ? (
+        <div className={`${classNameString} ${defaultClassNameString} `}>
+          <section className={homeSectionStyle}>
+            {dummyArray.map((item, index) => (
+              <ShimmerCard key={index} />
+            ))}
+          </section>
+        </div>
       ) : (
-        <div className={`${classNameString} flex flex-col`}>
+        <div
+          className={`${classNameString} ${defaultClassNameString} flex flex-col`}
+        >
           {tags?.length > 1 && (
             <section className="w-[100%] flex gap-3 whitespace-nowrap overflow-x-scroll relative scrollBarHr pb-2">
-              <small
-                onClick={() => getVideos()}
-                className="text-white font-semibold rounded-lg bg-stone-800 p-2 px-3 cursor-pointer hover:bg-stone-700 whitespace-nowrap "
-              >
+              <small onClick={allClickHandler} className={tagsStyle}>
                 All
               </small>
+
               {tags?.map(({ id, snippet: { title } }) => (
                 <small
                   key={id}
                   onClick={() => tagFilterHandler(id, title)}
-                  className="text-white font-semibold rounded-lg bg-stone-800 p-2 px-3 cursor-pointer hover:bg-stone-700 whitespace-nowrap "
+                  className={tagsStyle}
                 >
                   {title}
                 </small>
               ))}
             </section>
           )}
-          <section className="w-[100%] flex flex-wrap gap-2 justify-between overflow-hidden pt-6">
+          <section className={homeSectionStyle}>
             {data?.map((video) => (
               <VideoCard data={video} key={video.id} />
             ))}

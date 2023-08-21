@@ -49,3 +49,21 @@ body::-webkit-scrollbar-thumb {
   outline: 1px solid slategrey;
   border-radius: 0.25rem;
 }
+
+.shadoww {
+  box-shadow: rgba(119, 119, 119, 0.26) 0px 82px 70px 2px;
+}
+
+.blinkk {
+  /* transform: translateX(-50%); */
+  animation: blink 0.5s infinite alternate;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}

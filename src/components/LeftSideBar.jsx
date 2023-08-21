@@ -1,7 +1,11 @@
 import { BiHomeAlt2, BiLike, BiNews, BiShoppingBag } from "react-icons/bi";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { VscHistory } from "react-icons/vsc";
-import { PiFilmSlate, PiMusicNoteBold } from "react-icons/pi";
+import {
+  PiFilmSlate,
+  PiLightbulbFilamentLight,
+  PiMusicNoteBold,
+} from "react-icons/pi";
 import { TfiWorld } from "react-icons/tfi";
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { SiYoutubegaming } from "react-icons/si";
@@ -20,26 +24,26 @@ export const LeftSideBar = () => {
 
   const explore = [
     [<ImFire size={20} />, "Trending"],
-    [<BiShoppingBag size={20} />, "Shopping"],
     [<PiMusicNoteBold size={20} />, "Music"],
     [<SiYoutubegaming size={20} />, "Gaming"],
     [<PiFilmSlate size={20} />, "Movies"],
     [<BiNews size={20} />, "News"],
+    [<PiLightbulbFilamentLight size={20} />, "Learning"],
   ];
   const sub = [
     {
       src: "https://yt3.googleusercontent.com/ytc/AOPolaSj48pypV9ilqNUztYjQ8Q760NYCAw3w1LwoWbJYQ=s176-c-k-c0x00ffffff-no-rj",
-      username: "@akshaymarch7",
+      profileId: "UC3N9i_KvKZYP4F84FPIzgPQ",
       fullname: "Akshay Saini",
     },
     {
       src: "https://yt3.googleusercontent.com/X9eoDIB9cgb1s-kvATRs1lQDcU4Fjc15NDV9s9FF8ck7IsA8u7OdijaernoDV9LLdePgjlt_=s176-c-k-c0x00ffffff-no-rj",
-      username: "@warikoo",
+      profileId: "UCRzYN32xtBf3Yxsx5BvJWJw",
       fullname: "Warikoo",
     },
     {
       src: "https://yt3.googleusercontent.com/G42b4i9auAhu-cy3wi9IhLxmkfl2i_iokiVgHx32xsZ8I4ok6uzamWXUj16xzJmAGoq8fRfS1Q=s176-c-k-c0x00ffffff-no-rj",
-      username: "@RoadsideCoder",
+      profileId: "UCIPZVAwDGa-A4ZJxCBvXRuQ",
       fullname: "RoadsideCoder",
     },
   ];
@@ -63,10 +67,10 @@ export const LeftSideBar = () => {
   ];
 
   return sideBarOpen ? (
-    <div className="w-[15%] text-white px-2 bg-black py-2 min-h-[92vh] max-h-[92vh] fixed flex items-center flex-col overflow-auto scrollBar pt-0">
+    <div className="w-[15%] text-white px-2 bg-black py-2 min-h-[92vh] max-h-[92vh] z-50 fixed flex items-center flex-col overflow-auto scrollBar pt-0">
       <ListMaker list={mainTags} />
       <h1 className="px-4 py-2 mt-2 font-bold self-start">Explore</h1>
-      <ListMaker list={explore} />
+      <ListMakerExplore list={explore} />
       <h1 className="px-4 py-2 mt-2 font-bold self-start">Popular </h1>
       <SubListMaker list={sub} />
       <h1 className="px-4 py-2 mt-2 font-bold self-start">More from YouTube</h1>
@@ -98,7 +102,14 @@ export const LeftSideBar = () => {
   ) : (
     <div className="w-[8%] text-white pl-5 py-2 min-h-[92vh] max-h-[92vh] fixed flex items-center flex-col overflow-auto scrollBar gap-4 ">
       {mainTags.map((tag) => (
-        <NavLink className="hover:font-bold flex flex-col py-2 font-semibold w-full gap-1">
+        <NavLink
+          to={
+            tag[1] === "Home"
+              ? "/"
+              : `/${tag[1].replaceAll(" ", "").toLowerCase()}`
+          }
+          className="hover:font-bold flex flex-col py-2 font-semibold w-full gap-1"
+        >
           <span className="self-start">{tag[0]}</span>
           <small className="self-start">{tag[1]}</small>
         </NavLink>
@@ -135,21 +146,17 @@ const ListMaker = ({ list }) => {
 };
 
 const SubListMaker = ({ list }) => {
-  const navlinkStyler = ({ isActive }) => ({
-    backgroundColor: isActive && "rgb(41 37 36)",
-  });
   return (
     <>
       <ul className="relative w-[100%] pb-2 border-b border-stone-700">
         {list.map((obj) => {
-          const { src, username, fullname } = obj;
+          const { src, profileId, fullname } = obj;
 
           return (
-            <NavLink
+            <Link
               className="hover:bg-stone-800 flex px-4 py-2 w-[95%] font-semibold  rounded-md relative gap-5 items-center"
-              key={username}
-              style={navlinkStyler}
-              to={`${username}`}
+              key={profileId}
+              to={`/profile?cId=${profileId}`}
             >
               <img
                 src={src}
@@ -157,7 +164,7 @@ const SubListMaker = ({ list }) => {
                 className="object-contain rounded-full h-[1.5rem]"
               />
               <p className=""> {fullname}</p>
-            </NavLink>
+            </Link>
           );
         })}
       </ul>
@@ -188,6 +195,25 @@ const ListMakerLinks = ({ list }) => {
             </Link>
           );
         })}
+      </ul>
+    </>
+  );
+};
+
+const ListMakerExplore = ({ list }) => {
+  return (
+    <>
+      <ul className="relative w-[100%] py-2 border-b border-stone-700 ">
+        {list.map((tag) => (
+          <NavLink
+            className="hover:bg-stone-800 flex px-4 py-2 w-[100%] font-semibold mb-1 rounded-md  gap-6 items-center"
+            key={tag[1]}
+            to={`/explore?sq=${tag[1]}`}
+          >
+            {tag[0]}
+            <p className="">{tag[1]}</p>
+          </NavLink>
+        ))}
       </ul>
     </>
   );
