@@ -77,6 +77,7 @@ const Header = () => {
   const stopSpeakingHandler = () => {
     if (transcript?.length > 0) {
       navigate(`/results?search_query=${transcript.replaceAll(" ", "+")}`);
+      resetTranscript();
     }
     cancelVoiceSearchHandler();
   };
